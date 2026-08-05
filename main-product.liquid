@@ -1,0 +1,54 @@
+<section class="section-pad">
+  <div class="page-width">
+    <h2 style="text-align:center">{{ section.settings.title }}</h2>
+    {% render 'paw-divider' %}
+    <div class="testimonials-grid">
+      {% for block in section.blocks %}
+        <div class="testimonial" {{ block.shopify_attributes }}>
+          <div class="testimonial__stars" aria-label="{{ block.settings.stars }} / 5">
+            {% for i in (1..block.settings.stars) %}★{% endfor %}
+          </div>
+          <p class="testimonial__text">« {{ block.settings.text }} »</p>
+          <div class="testimonial__author">
+            <span class="testimonial__avatar">{{ block.settings.author | slice: 0 }}</span>
+            <div>
+              <strong>{{ block.settings.author }}</strong>
+              <small>{{ block.settings.pet }}</small>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Avis clients",
+  "settings": [
+    { "type": "text", "id": "title", "label": "Heading", "default": "Ils nous font confiance" }
+  ],
+  "blocks": [
+    {
+      "type": "testimonial",
+      "name": "Avis",
+      "settings": [
+        { "type": "textarea", "id": "text", "label": "Texte", "default": "Livraison rapide et croquettes de super qualité. Mon chien adore !" },
+        { "type": "text", "id": "author", "label": "Auteur", "default": "Camille" },
+        { "type": "text", "id": "pet", "label": "Compagnon", "default": "maman de Max 🐶" },
+        { "type": "range", "id": "stars", "label": "Étoiles", "min": 1, "max": 5, "step": 1, "default": 5 }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Avis clients",
+      "blocks": [
+        { "type": "testimonial" },
+        { "type": "testimonial", "settings": { "text": "Le panier douillet est devenu l'endroit préféré de ma chatte. Merci !", "author": "Julien", "pet": "papa de Luna 🐱" } },
+        { "type": "testimonial", "settings": { "text": "Service client adorable et retours super simples. Je recommande.", "author": "Sophie", "pet": "maman de Biscotte 🐶" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

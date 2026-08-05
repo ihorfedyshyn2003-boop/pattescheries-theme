@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="{{ request.locale.iso_code }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ page_title }}{% unless page_title contains shop.name %} — {{ shop.name }}{% endunless %}</title>
+  {% if page_description %}<meta name="description" content="{{ page_description | escape }}">{% endif %}
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  {{ 'theme.css' | asset_url | stylesheet_tag }}
+  {{ content_for_header }}
+  <style>
+    :root{
+      --c-ink: {{ settings.color_ink | default: '#1E2A3A' }};
+      --c-accent: {{ settings.color_accent | default: '#E8A64C' }};
+      --c-secondary: {{ settings.color_secondary | default: '#F07A6B' }};
+      --c-bg: {{ settings.color_bg | default: '#F4F8FA' }};
+    }
+  </style>
+</head>
+<body>
+  {% sections 'header-group' %}
+  <main id="MainContent">
+    {{ content_for_layout }}
+  </main>
+  {% sections 'footer-group' %}
+  {{ 'theme.js' | asset_url | script_tag }}
+</body>
+</html>

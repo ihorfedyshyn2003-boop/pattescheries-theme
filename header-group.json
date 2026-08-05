@@ -1,0 +1,36 @@
+<section class="hero">
+  <div class="hero__inner">
+    <div>
+      <h1>{{ section.settings.title }}</h1>
+      <p>{{ section.settings.subtitle }}</p>
+      <a href="{{ section.settings.button_link | default: routes.all_products_collection_url }}" class="btn">{{ section.settings.button_label }}</a>
+      <div class="hero__badges">
+        <span>{% render 'icon-paw' %} {{ section.settings.badge_1 }}</span>
+        <span>{% render 'icon-paw' %} {{ section.settings.badge_2 }}</span>
+        <span>{% render 'icon-paw' %} {{ section.settings.badge_3 }}</span>
+      </div>
+    </div>
+    <div class="hero__art">
+      {% if section.settings.image %}
+        {{ section.settings.image | image_url: width: 900 | image_tag: alt: section.settings.title }}
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Hero",
+  "settings": [
+    { "type": "text", "id": "title", "label": "Heading", "default": "Le bonheur commence par la truffe <em>🐾</em>" },
+    { "type": "textarea", "id": "subtitle", "label": "Subtitle", "default": "Croquettes, jouets, accessoires et couchages douillets pour chiens et chats. Sélectionnés avec amour, livrés rapidement." },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "Découvrir la boutique" },
+    { "type": "url", "id": "button_link", "label": "Button link" },
+    { "type": "image_picker", "id": "image", "label": "Image" },
+    { "type": "text", "id": "badge_1", "label": "Badge 1", "default": "Livraison offerte dès 49 €" },
+    { "type": "text", "id": "badge_2", "label": "Badge 2", "default": "Marques de confiance" },
+    { "type": "text", "id": "badge_3", "label": "Badge 3", "default": "Retours sous 30 jours" }
+  ],
+  "presets": [{ "name": "Hero" }]
+}
+{% endschema %}

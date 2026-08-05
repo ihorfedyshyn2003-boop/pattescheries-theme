@@ -1,0 +1,9 @@
+<div class="page-width empty-state">
+  {% render 'icon-paw' %}
+  <h1>404</h1>
+  <p style="margin:1rem 0">{{ '404.text' | t }}</p>
+  <a class="btn" href="{{ routes.root_url }}">{{ '404.home' | t }}</a>
+</div>
+{% schema %}
+{ "name": "404", "settings": [] }
+{% endschema %}

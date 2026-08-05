@@ -1,0 +1,37 @@
+<section class="cat-split section-pad">
+  <div class="page-width">
+    <h2>{{ section.settings.title }}</h2>
+    <div class="cat-split__grid">
+      <a href="{{ section.settings.dog_collection.url | default: routes.all_products_collection_url }}" class="cat-card cat-card--dog" {% if section.settings.dog_image %}style="background-image:url('{{ section.settings.dog_image | image_url: width: 900 }}')"{% endif %}>
+        <div class="cat-card__overlay"></div>
+        <div class="cat-card__content">
+          <h3>{{ section.settings.dog_title }}</h3>
+          <span>{{ 'general.shop_now' | t }} →</span>
+        </div>
+      </a>
+      <a href="{{ section.settings.cat_collection.url | default: routes.all_products_collection_url }}" class="cat-card cat-card--cat" {% if section.settings.cat_image %}style="background-image:url('{{ section.settings.cat_image | image_url: width: 900 }}')"{% endif %}>
+        <div class="cat-card__overlay"></div>
+        <div class="cat-card__content">
+          <h3>{{ section.settings.cat_title }}</h3>
+          <span>{{ 'general.shop_now' | t }} →</span>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Category split",
+  "settings": [
+    { "type": "text", "id": "title", "label": "Heading", "default": "Pour qui cherchez-vous ?" },
+    { "type": "text", "id": "dog_title", "label": "Dog card title", "default": "Chiens 🐶" },
+    { "type": "collection", "id": "dog_collection", "label": "Dog collection" },
+    { "type": "image_picker", "id": "dog_image", "label": "Dog image" },
+    { "type": "text", "id": "cat_title", "label": "Cat card title", "default": "Chats 🐱" },
+    { "type": "collection", "id": "cat_collection", "label": "Cat collection" },
+    { "type": "image_picker", "id": "cat_image", "label": "Cat image" }
+  ],
+  "presets": [{ "name": "Category split" }]
+}
+{% endschema %}

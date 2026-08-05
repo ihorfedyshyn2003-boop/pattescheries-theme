@@ -1,0 +1,24 @@
+<section class="promo-banner">
+  <div class="page-width promo-banner__inner">
+    <div>
+      <span class="promo-banner__tag">{{ section.settings.tag }}</span>
+      <h2>{{ section.settings.title }}</h2>
+      <p>{{ section.settings.subtitle }}</p>
+    </div>
+    <a href="{{ section.settings.link | default: routes.all_products_collection_url }}" class="btn btn--ink">{{ section.settings.button_label }}</a>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Promo banner",
+  "settings": [
+    { "type": "text", "id": "tag", "label": "Tag", "default": "Offre limitée" },
+    { "type": "text", "id": "title", "label": "Heading", "default": "-20 % sur tous les jouets" },
+    { "type": "text", "id": "subtitle", "label": "Subtitle", "default": "Jusqu'au dimanche, faites plaisir à vos compagnons." },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "J'en profite" },
+    { "type": "url", "id": "link", "label": "Link" }
+  ],
+  "presets": [{ "name": "Promo banner" }]
+}
+{% endschema %}

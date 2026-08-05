@@ -1,0 +1,28 @@
+<div class="page-width">
+  <div class="collection-head">
+    <h1>{{ collection.title }}</h1>
+    {% if collection.description != blank %}<p>{{ collection.description }}</p>{% endif %}
+  </div>
+  {% render 'paw-divider' %}
+  {% paginate collection.products by 12 %}
+    {% if collection.products.size > 0 %}
+      <div class="product-grid" style="padding-bottom:3rem">
+        {% for product in collection.products %}
+          {% render 'product-card', product: product %}
+        {% endfor %}
+      </div>
+      {% if paginate.pages > 1 %}
+        <div style="text-align:center;padding-bottom:3rem">{{ paginate | default_pagination }}</div>
+      {% endif %}
+    {% else %}
+      <div class="empty-state">
+        {% render 'icon-paw' %}
+        <h2>{{ 'collections.empty' | t }}</h2>
+      </div>
+    {% endif %}
+  {% endpaginate %}
+</div>
+
+{% schema %}
+{ "name": "Collection", "settings": [] }
+{% endschema %}

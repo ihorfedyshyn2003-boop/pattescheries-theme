@@ -1,0 +1,42 @@
+<div class="page-width section-pad">
+  <h1>{{ 'cart.title' | t }}</h1>
+  {% if cart.item_count > 0 %}
+    <form action="{{ routes.cart_url }}" method="post">
+      <table class="cart-table">
+        <thead>
+          <tr><th>{{ 'cart.product' | t }}</th><th>{{ 'products.quantity' | t }}</th><th>{{ 'cart.total' | t }}</th><th></th></tr>
+        </thead>
+        <tbody>
+          {% for item in cart.items %}
+            <tr>
+              <td>
+                <div class="cart-item">
+                  {% if item.image %}{{ item.image | image_url: width: 150 | image_tag: alt: item.title }}{% endif %}
+                  <div><strong>{{ item.product.title }}</strong>{% unless item.product.has_only_default_variant %}<br><small>{{ item.variant.title }}</small>{% endunless %}</div>
+                </div>
+              </td>
+              <td><input type="number" name="updates[]" value="{{ item.quantity }}" min="0" style="width:70px;padding:.5rem;border-radius:12px;border:2px solid #D8E1E8"></td>
+              <td>{{ item.final_line_price | money }}</td>
+              <td><a href="{{ item.url_to_remove }}" aria-label="{{ 'cart.remove' | t }}">✕</a></td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <div class="cart-footer">
+        <span class="cart-total">{{ 'cart.total' | t }}: {{ cart.total_price | money }}</span>
+        <button type="submit" name="update" class="btn btn--ghost">{{ 'cart.update' | t }}</button>
+        <button type="submit" name="checkout" class="btn btn--ink">{{ 'cart.checkout' | t }}</button>
+      </div>
+    </form>
+  {% else %}
+    <div class="empty-state">
+      {% render 'icon-paw' %}
+      <h2>{{ 'cart.empty' | t }}</h2>
+      <p style="margin:1rem 0"><a class="btn" href="{{ routes.all_products_collection_url }}">{{ 'general.shop_now' | t }}</a></p>
+    </div>
+  {% endif %}
+</div>
+
+{% schema %}
+{ "name": "Cart", "settings": [] }
+{% endschema %}
