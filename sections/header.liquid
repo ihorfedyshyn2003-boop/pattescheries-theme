@@ -1,0 +1,31 @@
+<header class="site-header">
+  <div class="site-header__inner">
+    <a href="{{ routes.root_url }}" class="site-header__logo">
+      {% render 'icon-paw' %}
+      {{ shop.name }}
+    </a>
+    <nav class="site-nav" aria-label="{{ 'general.navigation' | t }}">
+      {% for link in section.settings.menu.links %}
+        <a href="{{ link.url }}">{{ link.title }}</a>
+      {% endfor %}
+    </nav>
+    <div class="header-actions">
+      <a href="{{ routes.cart_url }}" class="cart-link" aria-label="{{ 'general.cart' | t }}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6h15l-1.5 9h-12L5 3H2"/><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/></svg>
+        {% if cart.item_count > 0 %}<span class="cart-count">{{ cart.item_count }}</span>{% endif %}
+      </a>
+      <button class="menu-toggle" aria-expanded="false" aria-label="{{ 'general.menu' | t }}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+{% schema %}
+{
+  "name": "Header",
+  "settings": [
+    { "type": "link_list", "id": "menu", "label": "Menu", "default": "main-menu" }
+  ]
+}
+{% endschema %}

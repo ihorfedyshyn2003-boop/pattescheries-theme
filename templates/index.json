@@ -1,0 +1,8 @@
+{
+  "sections": {
+    "hero": { "type": "hero", "settings": {} },
+    "cats": { "type": "category-split", "settings": {} },
+    "featured": { "type": "featured-collection", "settings": {} }
+  },
+  "order": ["hero", "cats", "featured"]
+}

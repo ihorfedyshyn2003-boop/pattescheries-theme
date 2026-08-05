@@ -1,0 +1,17 @@
+<div class="page-width section-pad">
+  <h1>{{ 'collections.title' | t }}</h1>
+  {% render 'paw-divider' %}
+  <div class="product-grid">
+    {% for collection in collections %}
+      <a href="{{ collection.url }}" class="product-card">
+        <div class="product-card__img">
+          {% if collection.featured_image %}{{ collection.featured_image | image_url: width: 500 | image_tag: loading: 'lazy', alt: collection.title }}{% endif %}
+        </div>
+        <div class="product-card__body"><span class="product-card__title">{{ collection.title }}</span></div>
+      </a>
+    {% endfor %}
+  </div>
+</div>
+{% schema %}
+{ "name": "Collection list", "settings": [] }
+{% endschema %}

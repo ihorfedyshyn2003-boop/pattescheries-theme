@@ -1,0 +1,15 @@
+<a href="{{ product.url }}" class="product-card">
+  {% if product.compare_at_price > product.price %}<span class="badge-sale">SALE</span>{% endif %}
+  <div class="product-card__img">
+    {% if product.featured_image %}
+      {{ product.featured_image | image_url: width: 500 | image_tag: loading: 'lazy', alt: product.featured_image.alt | default: product.title }}
+    {% endif %}
+  </div>
+  <div class="product-card__body">
+    <span class="product-card__title">{{ product.title }}</span>
+    <span class="product-card__price">
+      {{ product.price | money }}
+      {% if product.compare_at_price > product.price %}<s>{{ product.compare_at_price | money }}</s>{% endif %}
+    </span>
+  </div>
+</a>

@@ -1,0 +1,19 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "Pawly",
+    "theme_version": "1.0.0",
+    "theme_author": "Pawly",
+    "theme_documentation_url": "https://shopify.dev",
+    "theme_support_url": "https://shopify.dev"
+  },
+  {
+    "name": "Colors",
+    "settings": [
+      { "type": "color", "id": "color_ink", "label": "Primary (ink)", "default": "#1E2A3A" },
+      { "type": "color", "id": "color_accent", "label": "Accent (biscuit)", "default": "#E8A64C" },
+      { "type": "color", "id": "color_secondary", "label": "Secondary (coral)", "default": "#F07A6B" },
+      { "type": "color", "id": "color_bg", "label": "Background", "default": "#F4F8FA" }
+    ]
+  }
+]

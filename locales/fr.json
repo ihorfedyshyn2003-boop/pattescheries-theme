@@ -1,0 +1,7 @@
+{
+  "general": { "navigation": "Navigation", "menu": "Menu", "cart": "Panier", "contacts": "Contact", "shop_now": "Découvrir", "view_all": "Tout voir" },
+  "products": { "add_to_cart": "Ajouter au panier", "sold_out": "Épuisé", "quantity": "Quantité", "variant": "Option" },
+  "collections": { "empty": "Aucun produit pour le moment", "title": "Collections" },
+  "cart": { "title": "Votre panier", "product": "Produit", "total": "Total", "update": "Mettre à jour", "checkout": "Commander", "remove": "Supprimer", "empty": "Votre panier est vide" },
+  "404": { "text": "Cette page s'est enfuie comme un chat devant le bain.", "home": "Retour à l'accueil" }
+}

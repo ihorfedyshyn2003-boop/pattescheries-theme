@@ -1,0 +1,36 @@
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div>
+      <h4>{{ shop.name }}</h4>
+      <p>{{ section.settings.about }}</p>
+    </div>
+    <div>
+      <h4>{{ 'general.menu' | t }}</h4>
+      <ul>
+        {% for link in section.settings.menu.links %}
+          <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+    <div>
+      <h4>{{ 'general.contacts' | t }}</h4>
+      <ul>
+        {% if section.settings.email != blank %}<li><a href="mailto:{{ section.settings.email }}">{{ section.settings.email }}</a></li>{% endif %}
+        {% if section.settings.phone != blank %}<li><a href="tel:{{ section.settings.phone }}">{{ section.settings.phone }}</a></li>{% endif %}
+      </ul>
+    </div>
+  </div>
+  <div class="site-footer__bottom">© {{ 'now' | date: '%Y' }} {{ shop.name }} 🐾</div>
+</footer>
+
+{% schema %}
+{
+  "name": "Footer",
+  "settings": [
+    { "type": "textarea", "id": "about", "label": "About text", "default": "Le meilleur pour vos compagnons à quatre pattes, avec amour." },
+    { "type": "link_list", "id": "menu", "label": "Menu", "default": "footer" },
+    { "type": "text", "id": "email", "label": "Email", "default": "hello@pawly.shop" },
+    { "type": "text", "id": "phone", "label": "Phone", "default": "+33 1 00 00 00 00" }
+  ]
+}
+{% endschema %}
