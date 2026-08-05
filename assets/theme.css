@@ -126,3 +126,9 @@ img{max-width:100%;display:block}
 
 .empty-state{text-align:center;padding:4rem 0}
 .empty-state svg{width:70px;height:70px;color:var(--c-accent);margin:0 auto 1rem}
+
+
+/* Fix: product page title size */
+.product-page h1{font-size:clamp(1.3rem,2.6vw,1.9rem);line-height:1.3}
+.product-page{align-items:start}
+.product-page__price{font-size:1.4rem}
