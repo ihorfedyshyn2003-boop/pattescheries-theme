@@ -1,3 +1,1 @@
-<div class="paw-divider" aria-hidden="true">
-  {% render 'icon-paw' %}{% render 'icon-paw' %}{% render 'icon-paw' %}
-</div>
+{ "sections": { "main": { "type": "main-collection-list", "settings": {} } }, "order": ["main"] }
