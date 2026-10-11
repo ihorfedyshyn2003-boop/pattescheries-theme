@@ -7,7 +7,7 @@ COSTS = {"crypto": dict(fee=0.001, slippage=0.0005), "forex": dict(fee=0.00003, 
 
 def main():
     ap = argparse.ArgumentParser(description="Аналіз стратегій і торгівля")
-    ap.add_argument("cmd", choices=["research", "analyze", "paper", "live"])
+    ap.add_argument("cmd", choices=["research", "analyze", "monitor", "paper", "live"])
     ap.add_argument("--market", choices=["crypto", "forex"], default="crypto")
     ap.add_argument("--symbol", default=None, help="BTC/USDT або EUR_USD")
     ap.add_argument("--tf", default="1h")
@@ -18,6 +18,9 @@ def main():
     ap.add_argument("--synthetic", action="store_true", help="тестові дані без мережі")
     ap.add_argument("--once", action="store_true", help="один крок (для cron)")
     a = ap.parse_args()
+    if a.cmd == "monitor":
+        from bot import monitor
+        return print(monitor.report())
     fx = a.market == "forex"
     a.symbol = a.symbol or ("EUR_USD" if fx else "BTC/USDT")
 
@@ -43,7 +46,7 @@ def main():
         for r in results:
             o = r["oos"]
             print(f"{'✅' if r['working'] else '❌'} {r['strategy']:15} OOS: return {o['return']:+.1%} "
-                  f"Sharpe {o['sharpe']:.2f} maxDD {o['max_dd']:.1%} угод {o['trades']} фолдів+ {o['folds_profitable']:.0%}")
+                  f"Sharpe {o['sharpe']:.2f} p={o['p_value']:.2f} maxDD {o['max_dd']:.1%} угод {o['trades']} фолдів+ {o['folds_profitable']:.0%}")
             for k, v in r["checks"].items():
                 if not v:
                     print(f"     ✗ {k}")

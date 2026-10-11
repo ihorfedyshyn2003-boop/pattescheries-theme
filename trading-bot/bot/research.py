@@ -13,6 +13,19 @@ from .strategies import STRATEGIES
 OUT = Path(__file__).resolve().parent.parent / "state"
 
 
+def bootstrap_p(r, block=24, n=2000, seed=0):
+    """Блоковий bootstrap: p-value того, що середня дохідність OOS не відрізняється від 0 (чиста випадковість)."""
+    r = np.asarray(r, float)
+    if len(r) < 2 * block:
+        return 1.0
+    rng = np.random.default_rng(seed)
+    c = r - r.mean()
+    k = len(r) // block
+    starts = rng.integers(0, len(r) - block, size=(n, k))
+    means = np.array([np.concatenate([c[i:i + block] for i in row]).mean() for row in starts])
+    return float((means >= r.mean()).mean())
+
+
 def grid(space):
     keys = list(space)
     for vals in itertools.product(*(space[k] for k in keys)):
@@ -60,6 +73,7 @@ def walk_forward(df, name, ppy, train=2000, test=500, min_trades=5, **cost):
     agg["folds"] = len(folds)
     agg["folds_profitable"] = sum(f["test_return"] > 0 for f in folds) / len(folds)
     agg["trades"] = sum(f["test_trades"] for f in folds)
+    agg["p_value"] = bootstrap_p(s.values)
     return {"strategy": name, "oos": agg, "folds": folds}
 
 
@@ -71,6 +85,7 @@ def verdict(res, bh):
         "≥60% фолдів у плюсі": o["folds_profitable"] >= 0.6,
         "≥20 угод (статистика)": o["trades"] >= 20,
         "просадка не гірша за -25%": o["max_dd"] > -0.25,
+        "не випадковість (bootstrap p<0.10)": o["p_value"] < 0.10,
     }
     return all(checks.values()), checks
 

@@ -28,3 +28,7 @@ export OANDA_ACCOUNT_ID=...; python main.py live --market forex     # OANDA_LIVE
 `python main.py analyze --market forex --csv eurusd_1h.csv` → `state/market_report.md`:
 волатильність за годинами, що ціна робить після sweep (з t-статистикою), інерція/відскок за режимами.
 Запускай щомісяця на нових даних: якщо висновки змінились — стратегія застаріла.
+
+## Контроль
+`python main.py monitor` — порівняння paper-результатів з бектестом (після ≥20 угод: ТРИМАЄТЬСЯ / ДЕГРАДУЄ).
+Прохідний бектест також вимагає bootstrap p<0.10 (відсіює везіння).

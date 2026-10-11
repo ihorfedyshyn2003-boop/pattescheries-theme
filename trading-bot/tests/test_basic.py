@@ -50,3 +50,16 @@ def test_analysis_report():
     df = data.synthetic(5000, start=1.08, vol=0.0006)
     txt = analysis.report(df)
     assert "після sweep" in txt and "Висновок" in txt
+
+
+def test_bootstrap_p():
+    from bot.research import bootstrap_p
+    rng = np.random.default_rng(1)
+    assert bootstrap_p(rng.normal(0, 1, 2000)) > 0.1            # шум -> не значуще
+    assert bootstrap_p(rng.normal(0.3, 1, 2000)) < 0.05         # реальний дрейф -> значуще
+
+
+def test_monitor_needs_state(tmp_path, monkeypatch):
+    from bot import monitor
+    monkeypatch.setattr(monitor, "STATE", tmp_path)
+    assert "Немає" in monitor.report()
