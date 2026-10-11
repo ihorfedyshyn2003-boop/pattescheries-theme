@@ -23,3 +23,8 @@ python main.py paper --market forex
 export OANDA_ACCOUNT_ID=...; python main.py live --market forex     # OANDA_LIVE=1 для реального рахунку
 ```
 Ризик: 0.5% на угоду, плече ≤10, денний стоп -3%. SL/TP ставляться брокеру разом з ордером.
+
+## Вивчення ринку
+`python main.py analyze --market forex --csv eurusd_1h.csv` → `state/market_report.md`:
+волатильність за годинами, що ціна робить після sweep (з t-статистикою), інерція/відскок за режимами.
+Запускай щомісяця на нових даних: якщо висновки змінились — стратегія застаріла.

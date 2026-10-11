@@ -43,3 +43,10 @@ def test_fx_paper_cycle(tmp_path, monkeypatch):
     assert t and t["tp"] > t["entry"]
     p.manage(df); p.save()
     assert (tmp_path / "fx_paper.json").exists()
+
+
+def test_analysis_report():
+    from bot import analysis
+    df = data.synthetic(5000, start=1.08, vol=0.0006)
+    txt = analysis.report(df)
+    assert "після sweep" in txt and "Висновок" in txt

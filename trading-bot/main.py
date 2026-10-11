@@ -7,7 +7,7 @@ COSTS = {"crypto": dict(fee=0.001, slippage=0.0005), "forex": dict(fee=0.00003, 
 
 def main():
     ap = argparse.ArgumentParser(description="Аналіз стратегій і торгівля")
-    ap.add_argument("cmd", choices=["research", "paper", "live"])
+    ap.add_argument("cmd", choices=["research", "analyze", "paper", "live"])
     ap.add_argument("--market", choices=["crypto", "forex"], default="crypto")
     ap.add_argument("--symbol", default=None, help="BTC/USDT або EUR_USD")
     ap.add_argument("--tf", default="1h")
@@ -21,13 +21,21 @@ def main():
     fx = a.market == "forex"
     a.symbol = a.symbol or ("EUR_USD" if fx else "BTC/USDT")
 
-    if a.cmd == "research":
+    if a.cmd in ("research", "analyze"):
         if a.synthetic:
             df = data.synthetic(a.bars, start=1.08, vol=0.0006) if fx else data.synthetic(a.bars)
         elif fx:
             df = data.fetch_forex(a.symbol, a.tf, a.bars, a.source, a.csv)
         else:
             df = data.fetch_ohlcv(a.symbol, a.tf, a.bars, a.exchange)
+        if a.cmd == "analyze":
+            from pathlib import Path
+
+            from bot import analysis
+            txt = analysis.report(df)
+            Path("state").mkdir(exist_ok=True)
+            Path("state/market_report.md").write_text(txt)
+            return print(txt)
         ppy = data.periods_per_year(a.tf, a.market)
         results, bh = research.research(df, ppy, **COSTS[a.market])
         print(f"Дані: {len(df)} свічок {df.index[0]} → {df.index[-1]}")
