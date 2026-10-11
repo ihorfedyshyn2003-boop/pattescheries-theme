@@ -18,7 +18,7 @@ def metrics(strat, pos, ppy):
     std = strat.std()
     sharpe = strat.mean() / std * np.sqrt(ppy) if std and std > 0 else 0.0
     dd = (eq / eq.cummax() - 1).min() if n else 0.0
-    trades = int((pos.diff().abs() > 0).sum() // 2)
+    trades = int(((pos != pos.shift(1).fillna(0.0)) & (pos != 0)).sum())
     return {"return": float(tot), "sharpe": float(sharpe), "max_dd": float(dd),
             "trades": trades, "exposure": float(pos.mean()) if n else 0.0}
 

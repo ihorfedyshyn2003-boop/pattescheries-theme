@@ -48,3 +48,7 @@ STRATEGIES = {
     "donchian": (donchian, {"entry": [20, 40, 55, 100], "exit": [10, 20, 40]}),
     "trend_pullback": (trend_filter_pullback, {"trend": [100, 200], "n": [3, 5, 7], "buy": [15, 25, 35]}),
 }
+
+from .smc import SMC_SPACE, smc_sweep  # noqa: E402
+
+STRATEGIES["smc_sweep"] = (smc_sweep, SMC_SPACE)

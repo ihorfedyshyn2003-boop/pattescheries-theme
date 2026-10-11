@@ -22,3 +22,24 @@ def test_walk_forward_runs():
     df = data.synthetic(5000)
     res, bh = research.research(df, 8760)
     assert res and all("working" in r for r in res)
+
+
+def test_smc_no_lookahead_and_risk():
+    from bot import smc
+    df = data.synthetic(4000, start=1.08, vol=0.0006)
+    s1, p1 = smc.smc_sweep(df, N=20, rr=2, trend=0, disp=0.0, session=False)
+    assert (p1 != 0).any()
+    df2 = df.copy(); df2.iloc[-50:, :4] *= 1.05           # змінюємо лише майбутнє
+    s2, _ = smc.smc_sweep(df2, N=20, rr=2, trend=0, disp=0.0, session=False)
+    assert np.allclose(s1.iloc[:-52], s2.iloc[:-52])       # минуле не змінилось
+    assert s1.min() > -0.06                                 # одна свічка не з'їдає >6% (ризик 0.5%, плече ≤10)
+
+
+def test_fx_paper_cycle(tmp_path, monkeypatch):
+    from bot import fx
+    monkeypatch.setattr(fx, "STATE", tmp_path)
+    p = fx.Paper(); df = data.synthetic(600, start=1.08, vol=0.0006)
+    t = p.open(1, df.close.iloc[-1] * 0.998, 2.0, df.close.iloc[-1])
+    assert t and t["tp"] > t["entry"]
+    p.manage(df); p.save()
+    assert (tmp_path / "fx_paper.json").exists()

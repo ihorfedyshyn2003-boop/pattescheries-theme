@@ -22,8 +22,14 @@ def grid(space):
         yield p
 
 
+def simulate(df, fn, params, ppy, **cost):
+    if getattr(fn, "simulated", False):      # стратегії зі стопами/тейками рахують угоди самі
+        return fn(df, cost=cost.get("fee", 0.001) + cost.get("slippage", 0.0005), **params)
+    return run(df, fn(df, **params), ppy, **cost)
+
+
 def evaluate(df, fn, params, ppy, **cost):
-    strat, pos = run(df, fn(df, **params), ppy, **cost)
+    strat, pos = simulate(df, fn, params, ppy, **cost)
     return metrics(strat, pos, ppy), strat, pos
 
 
@@ -41,7 +47,7 @@ def walk_forward(df, name, ppy, train=2000, test=500, min_trades=5, **cost):
             if m["trades"] >= min_trades and m["sharpe"] > best_s:
                 best, best_s = p, m["sharpe"]
         if best:
-            strat, pos = run(te_full, fn(te_full, **best), ppy, **cost)
+            strat, pos = simulate(te_full, fn, best, ppy, **cost)
             strat, pos = strat.iloc[300:], pos.iloc[300:]
             m = metrics(strat, pos, ppy)
             folds.append({"params": best, "train_sharpe": best_s, **{f"test_{k}": v for k, v in m.items()}})
@@ -64,15 +70,15 @@ def verdict(res, bh):
         "OOS прибуток > 0": o["return"] > 0,
         "≥60% фолдів у плюсі": o["folds_profitable"] >= 0.6,
         "≥20 угод (статистика)": o["trades"] >= 20,
-        "просадка менша за buy&hold": o["max_dd"] > bh["max_dd"],
+        "просадка не гірша за -25%": o["max_dd"] > -0.25,
     }
     return all(checks.values()), checks
 
 
-def research(df, ppy, **cost):
+def research(df, ppy, names=None, **cost):
     bh = buy_hold(df, ppy)
     results = []
-    for name in STRATEGIES:
+    for name in (names or STRATEGIES):
         r = walk_forward(df, name, ppy, **cost)
         if r:
             ok, checks = verdict(r, bh)
@@ -94,7 +100,8 @@ def pick_final_params(df, name, ppy, **cost):
     return best
 
 
-def save(name, params, symbol, timeframe, oos):
+def save(name, params, symbol, timeframe, oos, market="crypto"):
     OUT.mkdir(exist_ok=True)
     (OUT / "strategy.json").write_text(json.dumps(
-        {"strategy": name, "params": params, "symbol": symbol, "timeframe": timeframe, "oos": oos}, indent=2))
+        {"strategy": name, "params": params, "symbol": symbol, "instrument": symbol, "market": market,
+         "timeframe": timeframe, "oos": oos}, indent=2))
