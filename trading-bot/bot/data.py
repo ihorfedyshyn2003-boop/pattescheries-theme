@@ -79,9 +79,13 @@ def load_csv(path):
     if "date" in df.columns and "time" in df.columns:
         idx = pd.to_datetime(df["date"].astype(str) + " " + df["time"].astype(str))
     else:
-        try:
+        if pd.api.types.is_numeric_dtype(df[tcol]):      # unix-час (dukascopy-node: мілісекунди)
+            unit = "ms" if df[tcol].iloc[0] > 1e11 else "s"
+            idx = pd.to_datetime(df[tcol], unit=unit)
+        else:
+          try:
             idx = pd.to_datetime(df[tcol], utc=True).dt.tz_localize(None)
-        except (ValueError, TypeError):
+          except (ValueError, TypeError):
             idx = pd.to_datetime(df[tcol], dayfirst=True, utc=True).dt.tz_localize(None)
     out = df[["open", "high", "low", "close"]].astype(float)
     out["volume"] = df["volume"].astype(float) if "volume" in df.columns else 0.0
