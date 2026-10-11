@@ -74,12 +74,15 @@ def load_csv(path):
     df = pd.read_csv(path, sep=None, engine="python")
     df.columns = [str(c).strip().lower().replace("<", "").replace(">", "") for c in df.columns]
     tcol = next((c for c in df.columns if c in ("time", "date", "datetime", "gmt time", "timestamp", "local time")), None)
-    if tcol is None and {"date", "time"} <= set(df.columns):
-        pass
+    if tcol is None and not ({"date", "time"} <= set(df.columns)):
+        tcol = df.columns[0]               # безіменна перша колонка (pandas-експорт)
     if "date" in df.columns and "time" in df.columns:
         idx = pd.to_datetime(df["date"].astype(str) + " " + df["time"].astype(str))
     else:
-        idx = pd.to_datetime(df[tcol], dayfirst=True, utc=True).dt.tz_localize(None)
+        try:
+            idx = pd.to_datetime(df[tcol], utc=True).dt.tz_localize(None)
+        except (ValueError, TypeError):
+            idx = pd.to_datetime(df[tcol], dayfirst=True, utc=True).dt.tz_localize(None)
     out = df[["open", "high", "low", "close"]].astype(float)
     out["volume"] = df["volume"].astype(float) if "volume" in df.columns else 0.0
     out.index = idx
