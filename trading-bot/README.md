@@ -42,3 +42,8 @@ python main.py research --market forex --csv data/eurusd_1h.csv --strategies lon
 Результат на EUR/USD 1h 2015–2025 (FXCM): жодна не пройшла walk-forward. Найближча — `london_breakout`
 (азія до 07 UTC, вихід 20 UTC): Sharpe нетто 0.63 з фіксованими параметрами, але 2020–25 > 2015–20
 і при подвоєних витратах ≈0. `local_hours` працював до 2020, потім зник.
+
+### ICT / Smart Money моделі (як у SMC-школах, напр. DarkTrader) — `asia_sweep`, `fvg_retest`
+Школи не публікують точних правил, тож це формалізація типових моделей курсу: зняття азійського
+high/low у London killzone з поверненням у діапазон, і лімітний вхід з FVG за HTF-bias (EMA).
+EUR/USD 1h 2015–2025: Sharpe брутто ≈0 (переваги немає ще до витрат), нетто −0.4…−1.3, walk-forward −45…−65%.
