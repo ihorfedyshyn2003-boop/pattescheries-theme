@@ -48,20 +48,24 @@ def evaluate(df, fn, params, ppy, **cost):
 
 def walk_forward(df, name, ppy, train=2000, test=500, min_trades=5, **cost):
     fn, space = STRATEGIES[name]
+    warm = getattr(fn, "warmup", 300)     # стратегіям з довгим lookback (tsmom) потрібен довший прогрів
     folds, oos = [], []
-    start = 0
+    start = max(0, warm - 300) if warm > 300 else 0
     while start + train + test <= len(df):
-        tr = df.iloc[start:start + train]
+        # train теж рахуємо з прогрівом, метрики — лише по самому train-вікну
+        w0 = max(0, start - warm) if warm > 300 else start
+        tr_full = df.iloc[w0:start + train]
         # warmup: тест рахуємо з хвостом train, щоб індикатори були прогріті, метрики — лише по test
-        te_full = df.iloc[start + train - 300:start + train + test]
+        te_full = df.iloc[start + train - warm:start + train + test]
         best, best_s = None, -9
         for p in grid(space):
-            m, _, _ = evaluate(tr, fn, p, ppy, **cost)
+            s_, p_ = simulate(tr_full, fn, p, ppy, **cost)
+            m = metrics(s_.iloc[start - w0:], p_.iloc[start - w0:], ppy)
             if m["trades"] >= min_trades and m["sharpe"] > best_s:
                 best, best_s = p, m["sharpe"]
         if best:
             strat, pos = simulate(te_full, fn, best, ppy, **cost)
-            strat, pos = strat.iloc[300:], pos.iloc[300:]
+            strat, pos = strat.iloc[warm:], pos.iloc[warm:]
             m = metrics(strat, pos, ppy)
             folds.append({"params": best, "train_sharpe": best_s, **{f"test_{k}": v for k, v in m.items()}})
             oos.append((strat, pos))

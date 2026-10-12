@@ -32,3 +32,13 @@ export OANDA_ACCOUNT_ID=...; python main.py live --market forex     # OANDA_LIVE
 ## Контроль
 `python main.py monitor` — порівняння paper-результатів з бектестом (після ≥20 угод: ТРИМАЄТЬСЯ / ДЕГРАДУЄ).
 Прохідний бектест також вимагає bootstrap p<0.10 (відсіює везіння).
+
+## Стратегії з відкритих джерел (forex, long/short) — `bot/fx_strategies.py`
+`local_hours` (Breedon & Ranaldo), `fix_flow` (фіксинг WM/Reuters 16:00 London), `london_breakout`,
+`tsmom` (Moskowitz–Ooi–Pedersen), `asian_fade`. Тест лише частини:
+```
+python main.py research --market forex --csv data/eurusd_1h.csv --strategies london_breakout,local_hours
+```
+Результат на EUR/USD 1h 2015–2025 (FXCM): жодна не пройшла walk-forward. Найближча — `london_breakout`
+(азія до 07 UTC, вихід 20 UTC): Sharpe нетто 0.63 з фіксованими параметрами, але 2020–25 > 2015–20
+і при подвоєних витратах ≈0. `local_hours` працював до 2020, потім зник.

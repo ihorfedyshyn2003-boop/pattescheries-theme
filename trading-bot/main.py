@@ -17,6 +17,7 @@ def main():
     ap.add_argument("--bars", type=int, default=8000)
     ap.add_argument("--synthetic", action="store_true", help="тестові дані без мережі")
     ap.add_argument("--once", action="store_true", help="один крок (для cron)")
+    ap.add_argument("--strategies", help="через кому: які стратегії тестувати (за замовч. усі для ринку)")
     a = ap.parse_args()
     if a.cmd == "monitor":
         from bot import monitor
@@ -40,7 +41,9 @@ def main():
             Path("state/market_report.md").write_text(txt)
             return print(txt)
         ppy = data.periods_per_year(a.tf, a.market)
-        results, bh = research.research(df, ppy, **COSTS[a.market])
+        from bot.strategies import CRYPTO_NAMES, STRATEGIES
+        names = a.strategies.split(",") if a.strategies else (list(STRATEGIES) if fx else CRYPTO_NAMES)
+        results, bh = research.research(df, ppy, names=names, **COSTS[a.market])
         print(f"Дані: {len(df)} свічок {df.index[0]} → {df.index[-1]}")
         print(f"Buy&Hold: return {bh['return']:+.1%}, Sharpe {bh['sharpe']:.2f}, maxDD {bh['max_dd']:.1%}\n")
         for r in results:

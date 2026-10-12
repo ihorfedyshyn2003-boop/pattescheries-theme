@@ -52,3 +52,8 @@ STRATEGIES = {
 from .smc import SMC_SPACE, smc_sweep  # noqa: E402
 
 STRATEGIES["smc_sweep"] = (smc_sweep, SMC_SPACE)
+
+from .fx_strategies import FX_STRATEGIES  # noqa: E402  (long/short — лише для forex)
+
+STRATEGIES.update(FX_STRATEGIES)
+CRYPTO_NAMES = ["sma_cross", "rsi_reversion", "donchian", "trend_pullback", "smc_sweep"]
